@@ -89,6 +89,7 @@
 
   Router.prototype = {
     init: function (config) {
+      // console.log("init")
       var self = this;
       // 路由遍历
       this.routerMap = config ? config.routes : this.routerMap
@@ -151,7 +152,7 @@
 
       //页面首次加载 匹配路由
       window.addEventListener('load', function (event) {
-        // console.log('load', event);
+        console.log('load', event);
         self.historyChange(event)
       }, false)
 
@@ -165,7 +166,15 @@
     // 路由历史纪录变化
     historyChange: function (event) {
       var currentHash = util.getParamsUrl();
+      // console.log(currentHash)
+      // 首次
+      // {
+      //   params: []
+      //   path: "/home"
+      //   query: {}
+      // }
       var nameStr = "router-" + (this.routerViewId) + "-history"
+      // []
       this.history = window.sessionStorage[nameStr] ? JSON.parse(window.sessionStorage[nameStr]) : []
 
       var back = false,
@@ -204,10 +213,14 @@
       }
       console.log('historyFlag :', this.historyFlag)
       // console.log('history :', this.history)
+      // 多级缓存 
       if (!this.stackPages) {
         this.historyFlag = 'forward'
       }
+
+      // 缓存
       window.sessionStorage[nameStr] = JSON.stringify(this.history)
+
       this.urlChange()
     },
     // 切换页面
@@ -251,16 +264,22 @@
         }, 350);
         // 前进和刷新都执行回调 与 初始滚动位置为 0
         currentPage.scrollTop = 0
-        this.routes[currHash].callback ? this.routes[currHash].callback(currentHash) : null
+        // this.routes[currHash].callback ? this.routes[currHash].callback(currentHash) : null
       }
-      this.afterFun ? this.afterFun(currentHash) : null
+      // this.afterFun ? this.afterFun(currentHash) : null
     },
     //路由处理
     urlChange: function () {
+      // {
+      //   params: []
+      //   path: "/home"
+      //   query: {}
+      // }
       var currentHash = util.getParamsUrl();
       if (this.routes[currentHash.path]) {
         var self = this;
         if (this.beforeFun) {
+          console.log('ffff111')
           this.beforeFun({
             to: {
               path: currentHash.path,
@@ -271,6 +290,7 @@
             }
           })
         } else {
+          console.log('ffff')
           this.changeView(currentHash)
         }
       } else {
@@ -292,7 +312,13 @@
         this.routes[path] = {
           callback: route.callback, //回调
         }
+        // 注册逻辑，path 对应 组件
       }
+      console.log(this.routes)
+      // {
+      // '/list': {callback: ƒ},
+      // ...
+      // }
     },
     //切换之前的钩子
     beforeEach: function (callback) {

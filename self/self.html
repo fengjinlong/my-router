@@ -1,14 +1,14 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>自定义路由 route </title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
-  <link rel="stylesheet" href="./app.css">
-</head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
 
+  <link rel="stylesheet" href="./self.css">
+  <title>Document</title>
+</head>
 <body>
   <div id="routerView" data-animationName="slide">
     <div class="page" data-hash="/home">
@@ -17,8 +17,7 @@
         <script type="text/javascript">
           window.home = function (route) {
             console.log('home:', route)
-            var str1 =
-              "<div><a class='back' onclick='window.history.go(-1)'>返回</a></div> <h2>首页</h2> <input type='text'> <div><a href='#/list' >列表1</div></div><div class='height'>内容占位</div>"
+            var str1 = "<div><a class='back' onclick='window.history.go(-1)'>返回</a></div> <h2>首页</h2> <input type='text'> <div><a href='#/list' >列表1</div></div><div class='height'>内容占位</div>"
             var str =
               "<div><a class='back' onclick='window.history.go(-1)'>返回</a></div> <h2>首页</h2> <input type='text'> <div><div href='javascript:void(0);' onclick='linkTo(\"#/list\")'>列表</div></div><div class='height'>内容占位</div>"
             document.querySelector("#home").innerHTML = str
@@ -70,9 +69,9 @@
       </div>
     </div>
   </div>
-  <script type="text/javascript" src="./router.js"></script>
+  <script type="text/javascript" src="./self.js"></script>
   <script type="text/javascript">
-    var config = {
+  var config = {
       routerViewId: '#routerView', // 路由切换的挂载点 id
       stackPages: true, // 多级页面缓存
       animationName: "slide", // 多级页面缓存
@@ -83,10 +82,6 @@
           home()
         }
       }]
-    }
-
-    function home() {
-      console.log("homecallback")
     }
 
     router.init(config)
@@ -106,7 +101,5 @@
     document.getElementsByTagName('html')[0].style.fontSize = width / 7.5 + 'px';
   </script>
 </body>
-
-<!-- https://biaochenxuying.github.io/route/index.html#/home -->
 
 </html>
