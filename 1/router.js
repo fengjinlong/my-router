@@ -221,7 +221,7 @@
       // 缓存
       window.sessionStorage[nameStr] = JSON.stringify(this.history)
 
-      // this.urlChange()
+      this.urlChange()
     },
     // 切换页面
     changeView: function (currentHash) {
