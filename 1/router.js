@@ -157,10 +157,10 @@
       }, false)
 
       //路由切换
-      // window.addEventListener('hashchange', function (event) {
-      //   // console.log('hashchange', event);
-      //   self.historyChange(event)
-      // }, false)
+      window.addEventListener('hashchange', function (event) {
+        // console.log('hashchange', event);
+        self.historyChange(event)
+      }, false)
 
     },
     // 路由历史纪录变化
@@ -251,6 +251,7 @@
           }
         }, 250);
       } else if (this.historyFlag === 'forward' || this.historyFlag === 'refresh') {
+
         if (previousPage) {
           util.addClass(previousPage, "current")
         }
@@ -264,9 +265,9 @@
         }, 350);
         // 前进和刷新都执行回调 与 初始滚动位置为 0
         currentPage.scrollTop = 0
-        // this.routes[currHash].callback ? this.routes[currHash].callback(currentHash) : null
+        this.routes[currHash].callback ? this.routes[currHash].callback(currentHash) : null
       }
-      // this.afterFun ? this.afterFun(currentHash) : null
+      this.afterFun ? this.afterFun(currentHash) : null
     },
     //路由处理
     urlChange: function () {

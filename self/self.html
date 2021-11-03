@@ -13,13 +13,14 @@
   <div id="routerView" data-animationName="slide">
     <div class="page" data-hash="/home">
       <div class="page-content">
-        <div id="home">11111</div>
+        <a href="#/list11">qqqq</a>
+        <div id="home"></div>
         <script type="text/javascript">
           window.home = function (route) {
             console.log('home:', route)
             var str1 = "<div><a class='back' onclick='window.history.go(-1)'>返回</a></div> <h2>首页</h2> <input type='text'> <div><a href='#/list' >列表1</div></div><div class='height'>内容占位</div>"
             var str =
-              "<div><a class='back' onclick='window.history.go(-1)'>返回</a></div> <h2>首页</h2> <input type='text'> <div><div href='javascript:void(0);' onclick='linkTo(\"#/list\")'>列表</div></div><div class='height'>内容占位</div>"
+              "<div><a class='back' onclick='window.history.go(-1)'>返回</a></div> <div><h2 href='javascript:void(0);' onclick='linkTo(\"#/list\")'>跳转到列表list</h2></div><div class='height'>内容占位</div>"
             document.querySelector("#home").innerHTML = str
           }
         </script>
@@ -79,6 +80,7 @@
         path: "/home",
         name: "home",
         callback: function (transition) {
+          console.log(home)
           home()
         }
       }]

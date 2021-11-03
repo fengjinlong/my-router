@@ -1,9 +1,17 @@
 (function () {
-  const uitl = {
+  const util = {
     closure(name) {
       return (currentHash) => {
         window.name && window[name](currentHash)
       }
+    },
+    genKey() {
+      var t = 'xxxxxxxx'
+      return t.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0
+        var v = c === 'x' ? r : (r & 0x3 | 0x8)
+        return v.toString(16)
+      })
     },
     getParamsUrl: function () {
       var hashDeatail = location.hash.split("?"),
@@ -20,6 +28,25 @@
         params: params
       }
     },
+    hasClass: function (elem, cls) {
+      cls = cls || '';
+      if (cls.replace(/\s/g, '').length == 0) return false; //当cls没有参数时，返回false
+      return new RegExp(' ' + cls + ' ').test(' ' + elem.className + ' ');
+    },
+    addClass: function (ele, cls) {
+      if (!util.hasClass(ele, cls)) {
+        ele.className = ele.className == '' ? cls : ele.className + ' ' + cls;
+      }
+    },
+    removeClass(elem, cls) {
+      if (util.hasClass(elem, cls)) {
+        var newClass = ' ' + elem.className.replace(/[\t\r\n]/g, '') + ' ';
+        while (newClass.indexOf(' ' + cls + ' ') >= 0) {
+          newClass = newClass.replace(' ' + cls + ' ', ' ');
+        }
+        elem.className = newClass.replace(/^\s+|\s+$/g, '');
+      }
+    }
   }
 
   function Router() {
@@ -56,7 +83,7 @@
           let item = {
             path: hash,
             name,
-            callback: uitl.closure(name)
+            callback: util.closure(name)
           }
           this.routerMap.push(item)
         }
@@ -65,16 +92,31 @@
 
 
       this.map()
+      // 跳转
+      window.linkTo = (path) => {
+        console.log('linkTo: ', path)
+        if (path.indexOf("?") !== -1) {
+          window.location.hash = path + '&key=' + util.genKey()
+        } else {
+          window.location.hash = path + '?key=' + util.genKey()
+        }
+      }
       window.addEventListener('load', function (event) {
         console.log('load')
         self.historyChange(event)
       }, false)
+
+      // 路由跳转
+      window.addEventListener('hashchange', (event) => {
+        self.historyChange(event)
+      }, false)
+
     },
     historyChange(event) {
       // 当前hash
-      let currentHash = uitl.getParamsUrl()
+      let currentHash = util.getParamsUrl()
       let nameStr = 'router-' + (this.routerViewId) + '-history'
-      this.history = window.sessionStorage[nameStr] ? JSON.stringify(window.sessionStorage[nameStr]) : []
+      this.history = window.sessionStorage[nameStr] ? JSON.parse(window.sessionStorage[nameStr]) : []
 
       let back = false
       let refresh = false
@@ -113,6 +155,7 @@
           query: currentHash.query
         }
         console.log(item)
+        // console.log(this.history)
         this.history.push(item)
       }
       console.log('historyFlag = ', this.historyFlag)
@@ -127,7 +170,7 @@
 
     },
     urlChange: function () {
-      let currentHash = uitl.getParamsUrl()
+      let currentHash = util.getParamsUrl()
       if (this.routes[currentHash.path]) {
         let selt = this
         if (this.beforeFun) {
@@ -138,7 +181,7 @@
               query: currentHash.query
             },
             next() {
-              // self.changeView(currentHash)
+              self.changeView(currentHash)
             }
           })
         } else {
@@ -148,6 +191,52 @@
       } else {
         location.hash = this.redirectRoute
       }
+    },
+    changeView(currentHash) {
+      let pages = document.getElementsByClassName('page')
+      let previousPage = document.getElementsByClassName('current')[0]
+      let currentPage = null
+      let currHash = null
+      for (let i = 0; i < pages.length; i++) {
+        let page = pages[i]
+        let hash = page.getAttribute('data-hash')
+        page.setAttribute('class', 'page')
+        if (hash === currentHash.path) {
+          currHash = hash
+          currentPage = page
+        }
+      }
+      let enterName = 'enter-' + this.animationName
+      let leaveName = 'leave-' + this.animationName
+
+      if (this.historyFlag === 'back') {
+        util.addClass(currentPage, 'current')
+        if (previousPage) {
+          util.addClass(previousPage, leaveName)
+        }
+        setTimeout(() => {
+          if (previousPage) {
+            util.removeClass(previousPage, leaveName)
+          }
+        }, 250)
+      } else if (this.historyFlag === 'forward' || this.historyFlag === 'refresh') {
+        if (previousPage) {
+          util.addClass(previousPage, 'current')
+        }
+        util.addClass(currentPage, enterName)
+
+        setTimeout(() => {
+          if (previousPage) {
+            util.removeClass(previousPage, 'current')
+          }
+          util.removeClass(currentPage, enterName)
+          util.addClass(currentPage, 'current')
+        }, 350)
+        currentPage.scrollTop = 1000
+        this.routes[currHash].callback ? this.routes[currHash].callback(currentHash) : null
+
+      }
+      // this.afterFun ? this.afterFun(currentHash) : null
     },
     // 注册路由
     map() {
