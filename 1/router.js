@@ -157,10 +157,10 @@
       }, false)
 
       //路由切换
-      window.addEventListener('hashchange', function (event) {
-        // console.log('hashchange', event);
-        self.historyChange(event)
-      }, false)
+      // window.addEventListener('hashchange', function (event) {
+      //   // console.log('hashchange', event);
+      //   self.historyChange(event)
+      // }, false)
 
     },
     // 路由历史纪录变化
@@ -221,7 +221,7 @@
       // 缓存
       window.sessionStorage[nameStr] = JSON.stringify(this.history)
 
-      this.urlChange()
+      // this.urlChange()
     },
     // 切换页面
     changeView: function (currentHash) {
