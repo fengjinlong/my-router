@@ -63,7 +63,7 @@
 
       }
 
-     
+
       this.map()
       window.addEventListener('load', function (event) {
         console.log('load')
@@ -100,7 +100,7 @@
           forward = true
         }
       }
-      
+
       if (back) {
         this.historyFlag = 'black'
       } else if (refresh) {
@@ -121,10 +121,33 @@
       }
       // 存一下
       window.sessionStorage[nameStr] = JSON.stringify(this.history)
-      // this.urlChange()
+      this.urlChange()
 
 
 
+    },
+    urlChange: function () {
+      let currentHash = uitl.getParamsUrl()
+      if (this.routes[currentHash.path]) {
+        let selt = this
+        if (this.beforeFun) {
+
+          this.beforeFun({
+            to: {
+              path: currentHash.path,
+              query: currentHash.query
+            },
+            next() {
+              // self.changeView(currentHash)
+            }
+          })
+        } else {
+          this.changeView(currentHash)
+        }
+
+      } else {
+        location.hash = this.redirectRoute
+      }
     },
     // 注册路由
     map() {
