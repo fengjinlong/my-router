@@ -210,7 +210,7 @@
       let enterName = 'enter-' + this.animationName
       let leaveName = 'leave-' + this.animationName
 
-      if (this.historyFlag === 'back') {
+      if (this.historyFlag === 'black') {
         util.addClass(currentPage, 'current')
         if (previousPage) {
           util.addClass(previousPage, leaveName)
