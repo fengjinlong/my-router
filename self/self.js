@@ -102,7 +102,7 @@
         }
       }
       window.addEventListener('load', function (event) {
-        console.log('load')
+        // console.log('load')
         self.historyChange(event)
       }, false)
 
@@ -154,7 +154,7 @@
           hash: currentHash.path,
           query: currentHash.query
         }
-        console.log(item)
+        // console.log(item)
         // console.log(this.history)
         this.history.push(item)
       }
@@ -172,7 +172,7 @@
     urlChange: function () {
       let currentHash = util.getParamsUrl()
       if (this.routes[currentHash.path]) {
-        let selt = this
+        let self = this
         if (this.beforeFun) {
 
           this.beforeFun({
@@ -187,8 +187,9 @@
         } else {
           this.changeView(currentHash)
         }
-
+        
       } else {
+        console.log(this.redirectRoute)
         location.hash = this.redirectRoute
       }
     },
@@ -236,7 +237,7 @@
         this.routes[currHash].callback ? this.routes[currHash].callback(currentHash) : null
 
       }
-      // this.afterFun ? this.afterFun(currentHash) : null
+      this.afterFun ? this.afterFun(currentHash) : null
     },
     // 注册路由
     map() {
@@ -254,7 +255,22 @@
         }
 
       }
-      console.log(this.routes)
+      // console.log(this.routes)
+    },
+ //切换之前的钩子
+    beforeEach: function (callback) {
+      if (Object.prototype.toString.call(callback) === '[object Function]') {
+        this.beforeFun = callback;
+      } else {
+        console.trace('路由切换前钩子函数不正确')
+      }
+    },
+    afterEach (callback) {
+      if (Object.prototype.toString.call(callback) === '[object Function]') {
+        this.afterFun = callback;
+      } else {
+        console.trace('err')
+      }
     }
   }
 
